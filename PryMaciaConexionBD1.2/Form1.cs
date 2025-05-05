@@ -14,7 +14,6 @@ namespace PryMaciaConexionBD1._2
         }
         ClsConexionBD conexion = new ClsConexionBD();
         int? productoSeleccionado = null;
-        int pos = -1;
         string datosOriginales = "";
 
 
@@ -111,25 +110,25 @@ namespace PryMaciaConexionBD1._2
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
-            if (pos >= 0)
-            {
-                var confirmacion = MessageBox.Show("¿Estás seguro de que deseas eliminar este producto?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (confirmacion != DialogResult.Yes)
-                    return;
-
-                // Obtener el código del producto seleccionado (asumo que es la primera celda)
-                int codigo = Convert.ToInt32(dgvDatos.Rows[pos].Cells[0].Value);
-
-                // Llamar al método para eliminar de la BD
-                conexion.EliminarProducto(codigo);
-
-                // Luego eliminar de la grilla
-                dgvDatos.Rows.RemoveAt(pos);
-            }
-            else
+            if (productoSeleccionado == null)
             {
                 MessageBox.Show("Seleccioná un producto para eliminar.");
+                return;
             }
+
+            var confirmacion = MessageBox.Show("¿Estás seguro de que deseas eliminar este producto?", "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirmacion != DialogResult.Yes)
+                return;
+
+            // Eliminar de la base de datos
+            conexion.EliminarProducto((int)productoSeleccionado);
+
+            // Actualizar la grilla
+            conexion.ListarBD(dgvDatos);
+
+            // Limpiar campos
+            LimpiarCampos();
+            productoSeleccionado = null;
         }
 
         private void dgvDatos_CellClick(object sender, DataGridViewCellEventArgs e)
