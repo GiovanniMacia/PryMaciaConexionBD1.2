@@ -68,7 +68,7 @@ namespace PryMaciaConexionBD1._2
                     if (count > 0)
                     {
                         MessageBox.Show("Inicio de sesión exitoso.");
-                        Form1 productos = new Form1();
+                        frmPrincipal productos = new frmPrincipal();
                         productos.Show();
                         this.Hide();
                     }
